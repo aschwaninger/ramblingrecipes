@@ -3,23 +3,29 @@
 namespace Ramblin;
 
 class Page {
-    private $jsDir = "/theme";
-    private $cssDir = "/theme";
+    private $jsDir = "/theme/";
+    private $cssDir = "/theme/";
+    private $viewsDir = "views/";
 
     public function buildHeader() {
-        echo '' ?>
-<html>
-    <head>
-        <title>Rambling Recipes</title>
-    </head>
-    <body>
-<?php ;
+        include_once($this->viewsDir."header.php");;
     }
 
     public function buildFooter() {
-        echo '' ?>
-    </body>
-</html>
-<?php ;
+        include_once($this->viewsDir."footer.php");
+    }
+
+    public function buildForm() {
+        include_once($this->viewsDir."recipe_form.php");
+    }
+
+    public function buildStory($url) {
+        $get = curl_init();
+
+        curl_setopt($get, CURLOPT_URL, $url);
+        curl_setopt($get, CURLOPT_RETURNTRANSFER, true);
+        
+        $page = curl_exec ($get);
+        curl_close ($get);
     }
 }
