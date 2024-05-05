@@ -28,6 +28,11 @@ class Editor {
     }
 
     public function getStory() {
+        if (empty($this->rawSiteContents)) {
+            // if we don't have our story go get it
+            $this->getSiteContents();
+        }
+        $this->story = $this->siteToText();
         // make something up for now
         $this->story = "Placeholder text about this time at grandma's house. Did you hear that? They've shut down the main reactor. We'll be destroyed for sure. This is madness! We're doomed! There'll be no escape for the Princess this time. What's that? Artoo! Artoo-Detoo, where are you? At last! Where have you been? They're heading in this direction.
 
@@ -39,5 +44,12 @@ class Editor {
         
         Your powers are weak, old man. You can't win, Darth. If you strike me down, I shall become more powerful than you can possibly imagine. Didn't we just leave this party? What kept you? We ran into some old friends.";
         return $this->story;
+    }
+
+    /**
+     * uses html2text library to 
+     */
+    private function siteToText() {
+
     }
 }
