@@ -3,8 +3,6 @@
 namespace Ramblin;
 
 class Page {
-    private $jsDir = "/theme/";
-    private $cssDir = "/theme/";
     private $viewsDir = "views/";
 
     public function buildHeader() {
@@ -20,12 +18,11 @@ class Page {
     }
 
     public function buildStory($url) {
-        $get = curl_init();
+        $story = new Editor($url);
+        include($this->viewsDir."container.php");
+    }
 
-        curl_setopt($get, CURLOPT_URL, $url);
-        curl_setopt($get, CURLOPT_RETURNTRANSFER, true);
-        
-        $page = curl_exec ($get);
-        curl_close ($get);
+    public function showError($msg) {
+        echo '<div class="exception">'.$msg.'</div>';
     }
 }

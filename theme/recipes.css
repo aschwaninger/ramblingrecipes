@@ -23,3 +23,18 @@ h1 {
     font-size: 4vw;
     font-family: 'thinFont';
 }
+
+.exception {
+    color: red;
+    font-weight: bold;
+}
+.story {
+    text-align: left;
+    margin: auto;
+    max-width: 50%;
+}
+@media only screen and (max-width: 800px) {
+    .story {
+        max-width: 90%;
+    }
+}
