@@ -28,7 +28,7 @@ class Editor {
         libxml_use_internal_errors(true);
         $this->dom->loadHTML($page, LIBXML_NOERROR);
         $this->dom->normalizeDocument();
-        // $this->rawSiteContents = $this->dom->saveHTML();
+        $this->rawSiteContents = $this->dom->saveHTML();
     }
 
     public function getStory() {
@@ -50,6 +50,12 @@ class Editor {
         //     $this->dom->saveHTML($articles->item(0));
         // }
         // return $new->saveHTML();
+        $article = $this->stripArticle(); // html regex'd from site content.
+        $articleDom = new \DOMDocument();
+        $articleDom->loadHTML($article, LIBXML_NOERROR);
+        $articleDom->normalizeDocument();
+        $this->dom = $articleDom; // replace sprawling original dom
+        // return $this->dom->saveHTML();
         $this->stripTagsOfType("link");
         $this->stripTagsOfType("meta");
         $this->stripTagsOfType("head");
@@ -60,7 +66,10 @@ class Editor {
         $this->stripTagsOfType("figure");
         $this->stripTagsOfType("ul");
         $this->stripTagsOfType("ol");
-        return $this->dom->saveHTML();
+        $this->stripTagsOfType("table");
+        $partial_strip = strip_tags($this->dom->saveHTML(), ["p", "h1", "h2", "h3"]);
+        // $partial_strip = preg_replace('/<.*(class=["\'].*?["\'])>/is', '', $partial_strip);
+        return $partial_strip;
     }
 
     private function stripTagsOfType($tag) {
@@ -69,6 +78,17 @@ class Editor {
         while ($tags->length > 0) {
             $t = $tags->item(0);
             $t->parentNode->removeChild($t);
+        }
+    }
+
+    /**
+     * Most modern recipe sites have the needed info inside an <article> element.
+     */
+    private function stripArticle() {
+        if (preg_match('/<article.*<\/article>/is', $this->rawSiteContents, $matches)) {
+            return $matches[0];
+        } else {
+            throw new \Exception("No article element found.");
         }
     }
 }
