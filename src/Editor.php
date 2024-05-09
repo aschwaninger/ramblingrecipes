@@ -87,6 +87,8 @@ class Editor {
     private function stripArticle() {
         if (preg_match('/<article.*<\/article>/is', $this->rawSiteContents, $matches)) {
             return $matches[0];
+        } else  if (preg_match('/<body.*<\/body>/is', $this->rawSiteContents, $matches)) {
+            return $matches[0];
         } else { // We could do a rolling fallback to other likely elements or just get the whole thing as a default
             // throw new \Exception("No article element found.");
             return $this->rawSiteContents;
